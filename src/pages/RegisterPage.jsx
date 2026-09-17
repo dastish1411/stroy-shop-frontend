@@ -9,6 +9,7 @@ function RegisterPage() {
     full_name: '',
     phone: '',
     role: 'client',
+    company_name: '',
   })
   const [error, setError] = useState('')
 
@@ -91,7 +92,7 @@ function RegisterPage() {
           />
         </div>
 
-        <div className="mb-6">
+        <div className="mb-4">
           <label className="block text-sm font-medium mb-1 text-charcoal">Я хочу быть</label>
           <select
             name="role"
@@ -103,6 +104,22 @@ function RegisterPage() {
             <option value="supplier">Поставщиком</option>
           </select>
         </div>
+
+        {formData.role === 'supplier' && (
+          <div className="mb-6">
+            <label className="block text-sm font-medium mb-1 text-charcoal">
+              Название компании
+            </label>
+            <input
+              type="text"
+              name="company_name"
+              value={formData.company_name}
+              onChange={handleChange}
+              className="w-full border border-charcoal/20 rounded-sm px-3 py-2 focus:outline-none focus:border-steel"
+              required
+            />
+          </div>
+        )}
 
         <button
           type="submit"
