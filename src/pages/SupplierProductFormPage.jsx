@@ -19,12 +19,10 @@ function SupplierProductFormPage() {
   const [loading, setLoading] = useState(isEditMode)
   const [error, setError] = useState('')
 
-  // загружаем список категорий для выпадающего списка - нужен всегда
   useEffect(() => {
     api.get('/categories/').then((response) => setCategories(response.data))
   }, [])
 
-  // если это режим редактирования - подгружаем текущие данные товара
   useEffect(() => {
     if (!isEditMode) return
 
@@ -71,7 +69,7 @@ function SupplierProductFormPage() {
       } else {
         await api.post('/supplier/products', payload)
       }
-      navigate('/supplier/products')
+      navigate('/supplier')
     } catch (err) {
       const detail = err.response?.data?.detail || 'Ошибка сохранения товара'
       setError(detail)
@@ -85,8 +83,8 @@ function SupplierProductFormPage() {
   return (
     <div className="min-h-screen bg-concrete">
       <div className="max-w-xl mx-auto px-6 py-10">
-        <Link to="/supplier/products" className="text-steel hover:underline mb-6 inline-block">
-          ← Мои товары
+        <Link to="/supplier" className="text-steel hover:underline mb-6 inline-block">
+          ← Личный кабинет
         </Link>
 
         <div className="bg-white border border-charcoal/10 rounded-sm p-8">
