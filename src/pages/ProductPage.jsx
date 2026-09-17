@@ -50,13 +50,11 @@ function ProductPage() {
   return (
     <div className="min-h-screen bg-concrete">
       <div className="max-w-5xl mx-auto px-6 py-10">
-        <Link to="/catalog" className="text-steel hover:underline mb-6 inline-block">
+        <Link to="/" className="text-steel hover:underline mb-6 inline-block">
           ← Назад в каталог
         </Link>
 
-        {/* Одна цельная панель с внутренними разделителями вместо отдельных карточек */}
         <div className="bg-white border border-charcoal/10 rounded-sm grid grid-cols-1 md:grid-cols-3">
-          {/* Левая часть - описание */}
           <div className="md:col-span-2 p-8 md:border-r border-charcoal/10">
             <p className="text-charcoal/50 text-sm mb-2">{product.category.name}</p>
             <h1 className="font-display text-3xl font-semibold text-charcoal mb-4">
@@ -75,7 +73,6 @@ function ProductPage() {
             )}
           </div>
 
-          {/* Правая часть - покупка + поставщик, разделены одной внутренней линией */}
           <div className="flex flex-col">
             <div className="p-6 border-b border-charcoal/10">
               <div className="flex items-baseline gap-2 mb-4">
