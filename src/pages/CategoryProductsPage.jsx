@@ -15,15 +15,22 @@ function CategoryProductsPage() {
   const [minQuantity, setMinQuantity] = useState('')
   const [sortBy, setSortBy] = useState('default')
 
+  const [page, setPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
+
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true)
       try {
         const response = await api.get('/products', {
-          params: { category_id: categoryId },
+          params: { category_id: categoryId, page, page_size: 20 },
         })
-        setProducts(response.data)
-        if (response.data.length > 0) {
-          setCategoryName(response.data[0].category.name)
+        // теперь ответ - это объект {items, total, page, total_pages},
+        // а не просто список - достаём нужные поля
+        setProducts(response.data.items)
+        setTotalPages(response.data.total_pages)
+        if (response.data.items.length > 0) {
+          setCategoryName(response.data.items[0].category.name)
         }
       } catch (err) {
         setError('Не удалось загрузить товары')
@@ -33,7 +40,7 @@ function CategoryProductsPage() {
     }
 
     fetchData()
-  }, [categoryId])
+  }, [categoryId, page])
 
   const filteredProducts = useMemo(() => {
     let result = products.filter((product) => {
@@ -45,8 +52,6 @@ function CategoryProductsPage() {
       return matchesMinPrice && matchesMaxPrice && matchesMinQuantity
     })
 
-    // sort() изменяет массив "на месте", поэтому делаем копию через [...result],
-    // чтобы не мутировать исходные данные напрямую
     switch (sortBy) {
       case 'price_asc':
         result = [...result].sort((a, b) => a.price - b.price)
@@ -176,6 +181,29 @@ function CategoryProductsPage() {
               ? 'В этой категории пока нет товаров.'
               : 'По заданным фильтрам ничего не найдено.'}
           </p>
+        )}
+
+        {/* Пагинация - показываем только если страниц больше одной */}
+        {totalPages > 1 && (
+          <div className="flex justify-center items-center gap-2 mt-8">
+            <button
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              disabled={page === 1}
+              className="px-4 py-2 border border-charcoal/20 rounded-sm disabled:opacity-40 disabled:cursor-not-allowed hover:border-steel transition-colors"
+            >
+              ← Назад
+            </button>
+            <span className="text-charcoal/60 px-3">
+              Страница {page} из {totalPages}
+            </span>
+            <button
+              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+              disabled={page === totalPages}
+              className="px-4 py-2 border border-charcoal/20 rounded-sm disabled:opacity-40 disabled:cursor-not-allowed hover:border-steel transition-colors"
+            >
+              Вперёд →
+            </button>
+          </div>
         )}
       </div>
     </div>
